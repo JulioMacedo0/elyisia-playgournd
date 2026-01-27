@@ -1,12 +1,15 @@
 import { Elysia } from "elysia";
-import "./lib/env";
-import { auth, betterAuthPlugin, OpenAPI } from "./lib/auth";
 import { openapi } from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors";
+import "./lib/env";
+import { authController } from "./modules/auth";
+import { userController } from "./modules/user";
+import { OpenAPI } from "./modules/auth/service";
 
 const app = new Elysia()
   .use(
     openapi({
+      path: "/docs",
       documentation: {
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),
@@ -21,9 +24,8 @@ const app = new Elysia()
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
   )
-  .use(betterAuthPlugin)
-  .get("/", () => "Hello Elysia", { auth: false })
-  .mount("/auth", auth.handler)
+  .use(authController)
+  .use(userController)
   .listen(3000);
 
 console.log(
