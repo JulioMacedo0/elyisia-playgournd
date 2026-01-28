@@ -2,9 +2,10 @@ import { Elysia } from "elysia";
 import { openapi } from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors";
 import "./lib/env";
-import { authController } from "./modules/auth";
+import { authController, authPlugin } from "./modules/auth";
 import { userController } from "./modules/user";
 import { OpenAPI } from "./modules/auth/service";
+import { env } from "./lib/env";
 
 const app = new Elysia()
   .use(
@@ -18,14 +19,16 @@ const app = new Elysia()
   )
   .use(
     cors({
-      origin: "http://localhost:3000",
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      origin:
+        env.NODE_ENV === "development" ? "http://localhost:3000" : env.DOMAIN,
+      methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
   )
+  .use(authPlugin)
   .use(authController)
-  .use(userController)
+  .guard({ auth: true }, (app) => app.use(userController))
   .listen(3000);
 
 console.log(
