@@ -1,16 +1,40 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { openAPI } from "better-auth/plugins";
+import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { db } from "../../db";
-
+import * as schema from "../../db/schema";
 export const auth = betterAuth({
+  user: {
+    additionalFields: {
+      companyId: {
+        type: "number",
+        input: true,
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (auth.api.signUpEmail.path === ctx.path) {
+        return {
+          context: {
+            ...ctx,
+            body: {
+              ...ctx.body,
+              companyId: -1,
+            },
+          },
+        };
+      }
+    }),
   },
   basePath: "/api",
   plugins: [openAPI()],
   database: drizzleAdapter(db, {
     provider: "pg",
+    schema,
   }),
 });
 
