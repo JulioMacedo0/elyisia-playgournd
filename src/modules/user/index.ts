@@ -8,6 +8,7 @@ const UserSchema = t.Object({
   name: t.String(),
   email: t.String(),
   emailVerified: t.Boolean(),
+  companyId: t.Integer(),
   image: t.Union([t.String(), t.Null()]),
   createdAt: t.Date(),
   updatedAt: t.Date(),
