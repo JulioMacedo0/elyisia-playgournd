@@ -12,7 +12,7 @@ export const authController = new Elysia({ name: "auth-controller" })
         return {
           user: session.user,
           session: session.session,
-        } satisfies AuthContext;
+        };
       },
     },
   });
