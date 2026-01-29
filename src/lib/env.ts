@@ -13,6 +13,7 @@ const envSchema = z.object({
   BETTER_AUTH_URL: z
     .url("BETTER_AUTH_URL must be a valid URL")
     .min(1, "BETTER_AUTH_URL is required"),
+  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
 });
 
 const parsedEnv = envSchema.safeParse({
@@ -24,6 +25,7 @@ const parsedEnv = envSchema.safeParse({
   DOMAIN: process.env.DOMAIN,
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
 });
 
 if (!parsedEnv.success) {
