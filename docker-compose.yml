@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: client_platform_db
+      POSTGRES_DB: client_plataform_db
     ports:
       - "5432:5432"
     volumes:
