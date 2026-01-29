@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { auth } from "./service";
 
 export const authController = new Elysia({ name: "auth-controller" }).mount(
-  "/auth",
+  "",
   auth.handler,
 );
 
