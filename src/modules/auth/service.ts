@@ -50,6 +50,7 @@ export const auth = betterAuth({
       }
     }),
   },
+  basePath: "/auth",
   baseURL: env.BETTER_AUTH_URL,
   plugins: [openAPI()],
   database: drizzleAdapter(db, {
