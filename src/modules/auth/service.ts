@@ -1,8 +1,9 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, env } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { db } from "../../db";
 import * as schema from "../../db/schema";
+
 export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, url, token }, request) => {
@@ -49,7 +50,7 @@ export const auth = betterAuth({
       }
     }),
   },
-  basePath: "/api",
+  baseURL: env.BETTER_AUTH_URL,
   plugins: [openAPI()],
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -61,7 +62,7 @@ let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>;
 const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema());
 
 export const OpenAPI = {
-  getPaths: (prefix = "/auth/api") =>
+  getPaths: (prefix = "/auth") =>
     getSchema().then(({ paths }) => {
       const reference: typeof paths = Object.create(null);
 
