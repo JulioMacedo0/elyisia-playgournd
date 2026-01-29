@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { db } from "../../db";
 import * as schema from "../../db/schema";
+import { redis } from "bun";
 
 export const auth = betterAuth({
   emailVerification: {
@@ -17,6 +18,20 @@ export const auth = betterAuth({
     //     text: `Click the link to verify your email: ${url}`,
     //   });
     // },
+  },
+  secondaryStorage: {
+    get: async (key) => {
+      return await redis.get(key);
+    },
+    set: async (key, value, ttl) => {
+      if (ttl) {
+        await redis.set(key, value);
+        await redis.expire(key, ttl);
+      }
+    },
+    delete: async (key) => {
+      await redis.del(key);
+    },
   },
   user: {
     additionalFields: {
