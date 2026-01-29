@@ -4,29 +4,32 @@ import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { db } from "../../db";
 import * as schema from "../../db/schema";
 import { redis } from "bun";
+import { resend } from "../../lib/resend";
 
 export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, url, token }, request) => {
+      resend.emails.send({
+        from: "Agronorte <no-reply@agronorte.com>",
+        to: [user.email],
+        subject: "Verify your email address",
+        html: `<p>Clique <a href="${url}">aqui</a> para verificar.</p>`,
+      });
       console.log(
         `Send verification email to ${user.email} with url: ${url} and token: ${token}`,
       );
     },
-    //   void sendEmail({
-    //     to: user.email,
-    //     subject: "Verify your email address",
-    //     text: `Click the link to verify your email: ${url}`,
-    //   });
-    // },
   },
+
   secondaryStorage: {
     get: async (key) => {
       return await redis.get(key);
     },
     set: async (key, value, ttl) => {
       if (ttl) {
+        await redis.set(key, value, "EX", ttl);
+      } else {
         await redis.set(key, value);
-        await redis.expire(key, ttl);
       }
     },
     delete: async (key) => {
@@ -48,6 +51,14 @@ export const auth = betterAuth({
     password: {
       hash: (password) => Bun.password.hash(password),
       verify: ({ password, hash }) => Bun.password.verify(password, hash),
+    },
+    sendResetPassword: async ({ user, url, token }, request) => {
+      void resend.emails.send({
+        from: "Agronorte <no-reply@agronorte.com>",
+        to: [user.email],
+        subject: "Reset your password",
+        html: `<p>Click <a href="${url}">here</a> to reset your password.</p>`,
+      });
     },
   },
   hooks: {
