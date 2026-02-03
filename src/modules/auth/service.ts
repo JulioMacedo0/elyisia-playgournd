@@ -1,4 +1,5 @@
-import { betterAuth, env } from "better-auth";
+import { betterAuth } from "better-auth";
+import { env } from "../../lib/env";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { db } from "../../db";
@@ -8,6 +9,8 @@ import { resend } from "../../lib/resend";
 
 export const auth = betterAuth({
   emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url, token }, request) => {
       resend.emails.send({
         from: "Agronorte <no-reply@agronorte.com>",
@@ -46,7 +49,6 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    autoSignIn: true,
     requireEmailVerification: true,
     password: {
       hash: (password) => Bun.password.hash(password),
@@ -78,6 +80,7 @@ export const auth = betterAuth({
   },
   basePath: "/auth",
   baseURL: env.BETTER_AUTH_URL,
+  trustedOrigins: [env.DOMAIN],
   plugins: [openAPI()],
   database: drizzleAdapter(db, {
     provider: "pg",
