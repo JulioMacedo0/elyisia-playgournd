@@ -20,7 +20,7 @@ const app = new Elysia()
   .use(
     cors({
       origin:
-        env.NODE_ENV === "development" ? "http://localhost:3000" : env.DOMAIN,
+        env.NODE_ENV === "development" ? "http://localhost:5173" : env.DOMAIN,
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
@@ -34,3 +34,5 @@ const app = new Elysia()
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
+
+export type App = typeof app;
