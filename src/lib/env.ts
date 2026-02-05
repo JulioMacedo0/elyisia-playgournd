@@ -14,6 +14,13 @@ const envSchema = z.object({
     .url("BETTER_AUTH_URL must be a valid URL")
     .min(1, "BETTER_AUTH_URL is required"),
   RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  ORACLE_USER: z.string().min(1, "ORACLE_USER is required"),
+  ORACLE_PASSWORD: z.string().min(1, "ORACLE_PASSWORD is required"),
+  ORACLE_PORT: z
+    .number("ORACLE_PORT must be a number")
+    .min(1, "ORACLE_PORT is required"),
+  ORACLE_DB_NAME: z.string().min(1, "ORACLE_DB_NAME is required"),
+  ORACLE_HOST: z.string().min(1, "ORACLE_HOST is required"),
 });
 
 const parsedEnv = envSchema.safeParse({
@@ -26,6 +33,11 @@ const parsedEnv = envSchema.safeParse({
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
+  ORACLE_USER: process.env.ORACLE_USER,
+  ORACLE_PASSWORD: process.env.ORACLE_PASSWORD,
+  ORACLE_PORT: Number(process.env.ORACLE_PORT),
+  ORACLE_DB_NAME: process.env.ORACLE_DB_NAME,
+  ORACLE_HOST: process.env.ORACLE_HOST,
 });
 
 if (!parsedEnv.success) {
