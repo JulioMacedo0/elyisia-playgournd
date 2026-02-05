@@ -6,6 +6,7 @@ import { authController, authPlugin } from "./modules/auth";
 import { userController } from "./modules/user";
 import { OpenAPI } from "./modules/auth/service";
 import { env } from "./lib/env";
+import { clientItemController } from "./modules/client-item";
 
 const app = new Elysia()
   .use(
@@ -28,7 +29,9 @@ const app = new Elysia()
   )
   .use(authPlugin)
   .use(authController)
-  .guard({ auth: true }, (app) => app.use(userController))
+  .guard({ auth: true }, (app) =>
+    app.use(userController).use(clientItemController),
+  )
   .listen(3000);
 
 console.log(
