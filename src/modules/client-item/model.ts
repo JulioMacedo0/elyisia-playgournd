@@ -1,16 +1,19 @@
 import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "VW_ITCLI_PORTAL_CLIENTES" })
 export class ClientItem {
-  @PrimaryColumn({ name: "CODPRD" })
+  @PrimaryColumn({ name: "CODPROD" })
   id!: number;
 
-  @Column({ name: "DESCPROD" })
+  @Column({ name: "DESCRPROD" })
   name!: string;
 
-  @Column({ name: "VLRCOMERC" })
-  value!: string;
+  @Column({ name: "IMAGEM", type: "blob" })
+  image!: Buffer;
 
-  @Column({ name: "CORDPARC" })
+  // @Column({ name: "VLRCOMERC" })
+  // value!: string;
+
+  @Column({ name: "CODPARC" })
   codpar!: number;
 }
