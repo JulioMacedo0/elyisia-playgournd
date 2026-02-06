@@ -9,6 +9,7 @@ import { env } from "./lib/env";
 import { clientItemController } from "./modules/client-item";
 import "reflect-metadata";
 import { oracleDataSource } from "./db/oracle";
+import { partnerController } from "./modules/partner";
 
 const createApp = async () => {
   return new Elysia()
@@ -32,7 +33,9 @@ const createApp = async () => {
     )
     .use(authPlugin)
     .use(authController)
-    .guard({}, (app) => app.use(userController).use(clientItemController));
+    .guard({}, (app) =>
+      app.use(userController).use(clientItemController).use(partnerController),
+    );
 };
 
 export type App = Awaited<ReturnType<typeof createApp>>;
