@@ -6,21 +6,20 @@ import { db } from "../../db";
 import * as schema from "../../db/schema";
 import { redis } from "bun";
 import { resend } from "../../lib/resend";
+import { getCompanyIdByDocument } from "../partner/service";
 
 export const auth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url, token }, request) => {
-      resend.emails.send({
-        from: "Agronorte <no-reply@agronorte.com>",
+      const res = await resend.emails.send({
+        from: "Agronorte <no-reply@updates.agronorte.com>",
         to: [user.email],
         subject: "Verify your email address",
         html: `<p>Clique <a href="${url}">aqui</a> para verificar.</p>`,
       });
-      console.log(
-        `Send verification email to ${user.email} with url: ${url} and token: ${token}`,
-      );
+      console.log(res);
     },
   },
 
@@ -45,6 +44,11 @@ export const auth = betterAuth({
         type: "number",
         input: true,
       },
+      documentId: {
+        // CPF or CNPJ
+        type: "string",
+        input: true,
+      },
     },
   },
   emailAndPassword: {
@@ -56,7 +60,7 @@ export const auth = betterAuth({
     },
     sendResetPassword: async ({ user, url, token }, request) => {
       void resend.emails.send({
-        from: "Agronorte <no-reply@agronorte.com>",
+        from: "Agronorte <no-reply@updates.agronorte.com>",
         to: [user.email],
         subject: "Reset your password",
         html: `<p>Click <a href="${url}">here</a> to reset your password.</p>`,
@@ -66,12 +70,17 @@ export const auth = betterAuth({
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (auth.api.signUpEmail.path === ctx.path) {
+        const { documentId } = ctx.body;
+        const companyId =
+          documentId && typeof documentId === "string"
+            ? await getCompanyIdByDocument(documentId)
+            : null;
         return {
           context: {
             ...ctx,
             body: {
               ...ctx.body,
-              companyId: -1,
+              companyId: companyId ?? -1,
             },
           },
         };
