@@ -7,7 +7,8 @@ const ErrorResponse = t.Object({ message: t.String() });
 const ClientItemSchema = t.Object({
   id: t.Integer(),
   name: t.String(),
-  value: t.String(),
+  // value: t.String(),
+  // image: t.ArrayBuffer(),
   codpar: t.Integer(),
 });
 
@@ -26,18 +27,18 @@ export const clientItemController = new Elysia({
       }
 
       const clientItem = await findClientItemByParId(id);
+
       if (!clientItem) {
         set.status = 404;
         return { message: "Client item not found" };
       }
-
       return clientItem;
     },
     {
       auth: true,
       params: t.Object({ id: t.String() }),
       response: {
-        200: ClientItemSchema,
+        200: t.Array(ClientItemSchema),
         400: ErrorResponse,
         404: ErrorResponse,
       },
