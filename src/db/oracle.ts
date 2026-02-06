@@ -8,8 +8,9 @@ export const oracleDataSource = new DataSource({
   password: env.ORACLE_PASSWORD,
   port: env.ORACLE_PORT,
   host: env.ORACLE_HOST,
-  database: env.ORACLE_DB_NAME,
-
+  schema: "SANKHYA",
+  //database: env.ORACLE_DB_NAME,
+  sid: env.ORACLE_DB_NAME,
   entities: [ClientItem],
   synchronize: false, // use migrations!
   migrationsRun: false,
