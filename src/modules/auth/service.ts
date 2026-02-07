@@ -71,10 +71,7 @@ export const auth = betterAuth({
     before: createAuthMiddleware(async (ctx) => {
       if (auth.api.signUpEmail.path === ctx.path) {
         const { documentId } = ctx.body;
-        const companyId =
-          documentId && typeof documentId === "string"
-            ? await getCompanyIdByDocument(documentId)
-            : null;
+        const companyId = await getCompanyIdByDocument(documentId);
         return {
           context: {
             ...ctx,
