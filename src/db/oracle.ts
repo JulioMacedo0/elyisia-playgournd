@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { env } from "../lib/env";
 import { ClientItem } from "../modules/client-item/model";
+import { Contat } from "../modules/contats/model";
 import { Partner } from "../modules/partner/model";
 
 export const oracleDataSource = new DataSource({
@@ -12,7 +13,7 @@ export const oracleDataSource = new DataSource({
   schema: "SANKHYA",
   //database: env.ORACLE_DB_NAME,
   sid: env.ORACLE_DB_NAME,
-  entities: [ClientItem, Partner],
+  entities: [ClientItem, Partner, Contat],
   synchronize: false, // use migrations!
   migrationsRun: false,
   dropSchema: false,

@@ -10,6 +10,7 @@ import { clientItemController } from "./modules/client-item";
 import "reflect-metadata";
 import { oracleDataSource } from "./db/oracle";
 import { partnerController } from "./modules/partner";
+import { contatsController } from "./modules/contats";
 
 const createApp = async () => {
   return new Elysia()
@@ -34,7 +35,11 @@ const createApp = async () => {
     .use(authPlugin)
     .use(authController)
     .guard({}, (app) =>
-      app.use(userController).use(clientItemController).use(partnerController),
+      app
+        .use(userController)
+        .use(clientItemController)
+        .use(partnerController)
+        .use(contatsController),
     );
 };
 
