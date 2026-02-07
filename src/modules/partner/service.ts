@@ -1,7 +1,7 @@
 import { oracleDataSource } from "../../db/oracle";
+import { normalizeCpfCnpj, normalizeEmail } from "../../lib/normalize";
+import { getContactEmailsByCodParc } from "../contats/service";
 import { Partner } from "./model";
-
-const normalizeCpfCnpj = (value: string) => value.replace(/\D/g, "");
 
 export const verifyPartnerEmail = async (
   cpfCnpj: string,
@@ -19,9 +19,19 @@ export const verifyPartnerEmail = async (
     select: ["id", "email", "cgcCpf"],
   });
 
-  if (!partner?.email) return false;
+  if (!partner?.id) return false;
 
-  return partner.email.trim().toLowerCase() === email.trim().toLowerCase();
+  const contactEmails = await getContactEmailsByCodParc(partner.id);
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return false;
+
+  const candidatesEmails = [
+    normalizeEmail(partner.email),
+    ...contactEmails.map((contactEmail) => normalizeEmail(contactEmail)),
+  ]
+    .filter((value): value is string => Boolean(value))
+
+  return candidatesEmails.includes(normalizedEmail);
 };
 
 export const getCompanyIdByDocument = async (
