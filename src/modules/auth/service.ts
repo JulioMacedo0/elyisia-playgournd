@@ -13,11 +13,16 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url, token }, request) => {
+      const webappUrl = new URL(
+        env.DOMAIN.endsWith("/") ? env.DOMAIN : `${env.DOMAIN}/`,
+      );
+      webappUrl.pathname = "verify-email";
+      webappUrl.searchParams.set("token", token);
       const res = await resend.emails.send({
         from: "Agronorte <no-reply@updates.agronorte.com>",
         to: [user.email],
         subject: "Verify your email address",
-        html: `<p>Clique <a href="${url}">aqui</a> para verificar.</p>`,
+        html: `<p>Clique <a href="${webappUrl.toString()}">aqui</a> para verificar.</p>`,
       });
       console.log(res);
     },
