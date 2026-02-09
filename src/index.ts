@@ -10,7 +10,7 @@ import { clientItemController } from "./modules/client-item";
 import "reflect-metadata";
 import { oracleDataSource } from "./db/oracle";
 import { partnerController } from "./modules/partner";
-import { contatsController } from "./modules/contats";
+import { contatsController } from "./modules/contat";
 
 const createApp = async () => {
   return new Elysia()
