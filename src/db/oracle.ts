@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { env } from "../lib/env";
 import { ClientItem } from "../modules/client-item/model";
-import { Contat } from "../modules/contats/model";
+import { Contat } from "../modules/contat/model";
 import { Partner } from "../modules/partner/model";
 
 export const oracleDataSource = new DataSource({
