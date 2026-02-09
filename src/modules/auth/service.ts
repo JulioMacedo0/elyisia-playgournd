@@ -70,8 +70,8 @@ export const auth = betterAuth({
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (auth.api.signUpEmail.path === ctx.path) {
-        const { documentId } = ctx.body;
-        const companyId = await getCompanyIdByDocument(documentId);
+        const { employerId } = ctx.body;
+        const companyId = await getCompanyIdByDocument(employerId);
         return {
           context: {
             ...ctx,
