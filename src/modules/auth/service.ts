@@ -72,6 +72,10 @@ export const auth = betterAuth({
       });
     },
   },
+  session: {
+    expiresIn: 90 * 24 * 60 * 60, // 90 days
+    updateAge: 7 * 24 * 60 * 60, // 7 days
+  },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (auth.api.signUpEmail.path === ctx.path) {
