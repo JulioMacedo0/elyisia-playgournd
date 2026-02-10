@@ -11,6 +11,7 @@ import "reflect-metadata";
 import { oracleDataSource } from "./db/oracle";
 import { partnerController } from "./modules/partner";
 import { contatsController } from "./modules/contat";
+import { financialProfileController } from "./modules/financial-profile";
 
 const createApp = async () => {
   return new Elysia()
@@ -39,7 +40,8 @@ const createApp = async () => {
         .use(userController)
         .use(clientItemController)
         .use(partnerController)
-        .use(contatsController),
+        .use(contatsController)
+        .use(financialProfileController),
     );
 };
 
