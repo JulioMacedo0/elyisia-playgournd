@@ -1,5 +1,9 @@
 import { Elysia, t } from "elysia";
-import { findPartnersByEmail, verifyPartnerEmail } from "./service";
+import {
+  findPartnersByEmail,
+  getCompanyById,
+  verifyPartnerEmail,
+} from "./service";
 
 const ErrorResponse = t.Object({ message: t.String() });
 
@@ -15,10 +19,48 @@ const PartnerEmailMatchResponse = t.Object({
   origin: t.Union([t.Literal("MAIN"), t.Literal("CONTACT")]),
 });
 
+const Partner = t.Object({
+  id: t.Number(),
+  nomeparc: t.String(),
+});
+
 export const partnerController = new Elysia({
   name: "partner-controller",
   prefix: "/partners",
 })
+  .get(
+    "/:companyId",
+    async ({ params, set }) => {
+      const companyId = Number(params.companyId);
+
+      if (!params.companyId || Number.isNaN(companyId)) {
+        set.status = 400;
+        return { message: "companyId must be a valid number" };
+      }
+
+      const company = await getCompanyById(companyId);
+
+      if (!company) {
+        set.status = 404;
+        return { message: "Company not found" };
+      }
+
+      return company;
+    },
+    {
+      params: t.Object({ companyId: t.String() }),
+      response: {
+        200: Partner,
+        400: ErrorResponse,
+        404: ErrorResponse,
+      },
+      detail: {
+        tags: ["Partner"],
+        summary: "Busca parceiro por ID",
+        description: "Retorna o parceiro (TGFPAR) pelo CODPARC informado.",
+      },
+    },
+  )
   .post(
     "/verify-email",
     async ({ body, set }) => {

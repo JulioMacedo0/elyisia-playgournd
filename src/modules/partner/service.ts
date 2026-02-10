@@ -115,3 +115,15 @@ export const getCompanyIdByDocument = async (
 
   return partner?.id ?? null;
 };
+
+export const getCompanyById = async (
+  companyId: number,
+): Promise<Pick<Partner, "id" | "nomeparc"> | null> => {
+  const partnerRepository = oracleDataSource.getRepository(Partner);
+  const partner = await partnerRepository.findOne({
+    select: ["id", "nomeparc"],
+    where: { id: companyId },
+  });
+  console.log(partner);
+  return partner ?? null;
+};
