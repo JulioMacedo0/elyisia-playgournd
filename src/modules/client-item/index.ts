@@ -7,7 +7,7 @@ const ErrorResponse = t.Object({ message: t.String() });
 const ClientItemSchema = t.Object({
   id: t.Integer(),
   name: t.String(),
-  // value: t.String(),
+  value: t.Number(),
   // image: t.ArrayBuffer(),
   codpar: t.Integer(),
 });

@@ -6,8 +6,7 @@ export const findClientItemByParId = async (codpar: string) => {
 
   const result = await clientItemRepository.find({
     where: { codpar: parseInt(codpar) },
-    select: ["id", "name", "codpar"],
+    select: ["id", "name", "codpar", "value"],
   });
-
   return result;
 };

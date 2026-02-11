@@ -11,8 +11,8 @@ export class ClientItem {
   @Column({ name: "IMAGEM", type: "blob" })
   image!: Buffer;
 
-  // @Column({ name: "VLRCOMERC" })
-  // value!: string;
+  @Column({ name: "PRECO", type: "number" })
+  value!: number;
 
   @Column({ name: "CODPARC" })
   codpar!: number;
